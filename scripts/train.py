@@ -23,6 +23,7 @@ sys.path.insert(0, os.getcwd() +'/src')
 
 import os
 sys.path.insert(0, os.getcwd() +'/examples')
+sys.path.insert(0, '../')
 import datasets
 from massive import (
     MASSIVETrainer,
