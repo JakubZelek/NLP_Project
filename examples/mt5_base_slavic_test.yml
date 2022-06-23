@@ -3,7 +3,7 @@ max_length: &max_length 512
 
 model:
   type: mt5 intent classification slot filling encoder only
-  checkpoint: ./out/mt5_slavic/checkpoint-2000/
+  checkpoint: ./out/mt5_slavic/checkpoint-2024/
 
 tokenizer:
   type: mt5

@@ -54,7 +54,6 @@ train_val:
   trainer_args:
     output_dir: ./out/xlmr_slavic
     logging_dir: ./out/log_xlmr_slavic
-    save_strategy: epoch
     evaluation_strategy: epoch
     learning_rate: 2.8e-05
     lr_scheduler_type: constant_with_warmup
@@ -71,7 +70,9 @@ train_val:
     label_names:
       - intent_num
       - slots_num
-    logging_steps: 7019
+    logging_steps: 100
     log_level: info
+    save_strategy: steps
+    save_steps: 7019
     locale_eval_strategy: all and each
     disable_tqdm: false

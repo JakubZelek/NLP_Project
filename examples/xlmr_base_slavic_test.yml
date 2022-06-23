@@ -3,7 +3,7 @@ max_length: &max_length 512
 
 model:
   type: xlmr intent classification slot filling
-  checkpoint: ./out/xmlr_slavic/checkpoint-2200/
+  checkpoint: ./out/xmlr_slavic/checkpoint-7019/
 
 tokenizer:
   type: xlmr base
