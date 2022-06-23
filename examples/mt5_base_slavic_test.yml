@@ -1,0 +1,38 @@
+run_name: &run_name mt5_base_pl_test
+max_length: &max_length 512
+
+model:
+  type: mt5 intent classification slot filling encoder only
+  checkpoint: ./out/mt5_slavic/checkpoint-2000/
+
+tokenizer:
+  type: mt5
+  tok_args:
+    vocab_file: ./saved_models/spiece.model
+    max_len: *max_length
+
+collator:
+  type: massive intent class slot fill
+  args:
+    max_length: *max_length
+    padding: longest
+
+test:
+  test_dataset: ./Massive/slavic_ds/.test
+  intent_labels: ./Massive/slavic_ds/.intents
+  slot_labels: ./Massive/slavic_ds/.slots
+  massive_path: ./Massive/slavic
+  slot_labels_ignore:
+    - Other
+  eval_metrics: all
+  trainer_args:
+    output_dir: ./out/test_mt5_pl
+    per_device_eval_batch_size: 64
+    eval_accumulation_steps: 4
+    remove_unused_columns: false
+    label_names:
+      - intent_num
+      - slots_num
+    logging_strategy: no
+    locale_eval_strategy: all and each
+    disable_tqdm: false
