@@ -77,7 +77,7 @@ train_val:
     logging_steps: 100
     log_level: info
     save_strategy: steps
-    save_steps: 676
+    save_steps: 674
     locale_eval_strategy: all and each
     adam_beta1: 0.8
     adam_beta2: 0.999
