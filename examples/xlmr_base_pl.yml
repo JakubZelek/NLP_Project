@@ -71,7 +71,7 @@ train_val:
     label_names:
       - intent_num
       - slots_num
-    logging_steps: 2300
+    logging_steps: 2339
     log_level: info
     locale_eval_strategy: all and each
     disable_tqdm: false
