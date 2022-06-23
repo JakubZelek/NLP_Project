@@ -17,11 +17,18 @@ limitations under the License.
 import argparse
 import datetime
 import logging
+import os
 import pprint
 import sys
 import time
 
+sys.path.insert(0, os.getcwd() + '/src')
+sys.path.insert(0, os.getcwd() + '/examples')
+sys.path.insert(0, '../')
+
 import datasets
+import torch.distributed as dist
+import transformers
 from massive import (
     MASSIVETrainer,
     MASSIVESeq2SeqTrainer,
@@ -35,10 +42,9 @@ from massive import (
     read_conf,
 )
 from ruamel.yaml import YAML
-import torch.distributed as dist
-import transformers
 
 logger = logging.getLogger('massive_logger')
+
 
 def main():
     """ Run Testing/Inference """
@@ -56,9 +62,9 @@ def main():
 
     # Setup logging
     logging.basicConfig(
-        #format="[%(levelname)s|%(name)s] %(asctime)s >> %(message)s",
+        # format="[%(levelname)s|%(name)s] %(asctime)s >> %(message)s",
         format="[%(levelname)s] %(asctime)s >> %(message)s",
-        #datefmt="%Y%m%d %H:%M",
+        # datefmt="%Y%m%d %H:%M",
         datefmt="%H:%M",
         handlers=[logging.StreamHandler(sys.stdout)],
     )
@@ -75,10 +81,9 @@ def main():
     if not conf.get('test.predictions_file'):
         logger.warning("Outputs will not be saved because no test.predictions_file was given")
     if conf.get('test.predictions_file') and \
-       (conf.get('test.trainer_args.locale_eval_strategy') != 'all only'):
+            (conf.get('test.trainer_args.locale_eval_strategy') != 'all only'):
         raise NotImplementedError("You must use 'all only' as the locale_eval_strategy if you"
                                   " include a predictions file")
-
 
     # Get all inputs to the trainer
     tokenizer = init_tokenizer(conf)
@@ -92,12 +97,12 @@ def main():
 
     # Get the right trainer
     trainer_cls = MASSIVESeq2SeqTrainer \
-                  if conf.get('test.trainer') == 'massive s2s' \
-                  else MASSIVETrainer
+        if conf.get('test.trainer') == 'massive s2s' \
+        else MASSIVETrainer
 
     trainer = trainer_cls(
-        model = model,
-        args = trainer_args,
+        model=model,
+        args=trainer_args,
         data_collator=collator,
         compute_metrics=compute_metrics,
         tokenizer=tokenizer
@@ -123,6 +128,7 @@ def main():
 
         output_predictions(outputs, intents, slots, conf, tokenizer,
                            remove_slots=slots_ignore, save_to_file=save_to_file)
+
 
 if __name__ == "__main__":
     main()

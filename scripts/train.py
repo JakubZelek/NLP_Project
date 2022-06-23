@@ -17,13 +17,13 @@ limitations under the License.
 import argparse
 import datetime
 import logging
+import os
 import sys
-import os
-sys.path.insert(0, os.getcwd() +'/src')
 
-import os
-sys.path.insert(0, os.getcwd() +'/examples')
+sys.path.insert(0, os.getcwd() + '/src')
+sys.path.insert(0, os.getcwd() + '/examples')
 sys.path.insert(0, '../')
+
 import datasets
 from massive import (
     MASSIVETrainer,
@@ -41,6 +41,7 @@ from ruamel.yaml import YAML
 
 logger = logging.getLogger('massive_logger')
 
+
 def main():
     """ Run Training """
     # parse the args
@@ -57,9 +58,9 @@ def main():
 
     # Setup logging
     logging.basicConfig(
-        #format="[%(levelname)s|%(name)s] %(asctime)s >> %(message)s",
+        # format="[%(levelname)s|%(name)s] %(asctime)s >> %(message)s",
         format="[%(levelname)s] %(asctime)s >> %(message)s",
-        #datefmt="%Y%m%d %H:%M",
+        # datefmt="%Y%m%d %H:%M",
         datefmt="%H:%M",
         handlers=[logging.StreamHandler(sys.stdout)],
     )
@@ -82,23 +83,23 @@ def main():
     compute_metrics = create_compute_metrics(intents, slots, conf, tokenizer, slots_ignore,
                                              metrics)
 
-
     # Get the right trainer
     trainer_cls = MASSIVESeq2SeqTrainer \
-                  if conf.get('train_val.trainer') == 'massive s2s' \
-                  else MASSIVETrainer
+        if conf.get('train_val.trainer') == 'massive s2s' \
+        else MASSIVETrainer
 
     trainer = trainer_cls(
-        model = model,
-        args = trainer_args,
-        train_dataset = train_ds,
-        eval_dataset = dev_ds,
+        model=model,
+        args=trainer_args,
+        train_dataset=train_ds,
+        eval_dataset=dev_ds,
         data_collator=collator,
         compute_metrics=compute_metrics,
         tokenizer=tokenizer
     )
 
     trainer.train()
+
 
 if __name__ == "__main__":
     main()
