@@ -1,9 +1,9 @@
-run_name: &run_name xlmr_base_romance
+run_name: &run_name xlmr_base_romance_bias
 max_length: &max_length 512
 
 model:
   type: xlmr intent classification slot filling
-  checkpoint: ./out/xlmr_romance/checkpoint-11699/
+  checkpoint: ./out/xlmr_romance_bias/checkpoint-20955/
 
 tokenizer:
   type: xlmr base
@@ -18,16 +18,16 @@ collator:
     padding: longest
 
 test:
-  test_dataset: ./Massive/romance_ds/.test
-  intent_labels: ./Massive/romance_ds/.intents
-  slot_labels: ./Massive/romance_ds/.slots
-  massive_path: ./Massive/romance
+  test_dataset: ./Massive/romance_bias_ds/.test
+  intent_labels: ./Massive/romance_bias_ds/.intents
+  slot_labels: ./Massive/romance_bias_ds/.slots
+  massive_path: ./Massive/romance_bias
   slot_labels_ignore:
     - Other
   eval_metrics: all
   #predictions_file: /PATH/TO/LOGS/xlmr_base_20220411/preds.jsonl
   trainer_args:
-    output_dir: ./out/test_xlmr_romance
+    output_dir: ./out/test_xlmr_romance_bias
     per_device_eval_batch_size: 128
     remove_unused_columns: false
     label_names:

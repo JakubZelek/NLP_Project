@@ -3,7 +3,7 @@ max_length: &max_length 512
 
 model:
   type: mt5 intent classification slot filling encoder only
-  checkpoint: ./out/mt5_romance/checkpoint-3374/
+  checkpoint: ./out/mt5_romance_bias/checkpoint-4709/
 
 tokenizer:
   type: mt5
@@ -18,15 +18,15 @@ collator:
     padding: longest
 
 test:
-  test_dataset: ./Massive/romance_ds/.test
-  intent_labels: ./Massive/romance_ds/.intents
-  slot_labels: ./Massive/romance_ds/.slots
-  massive_path: ./Massive/romance
+  test_dataset: ./Massive/romance_bias_ds/.test
+  intent_labels: ./Massive/romance_bias_ds/.intents
+  slot_labels: ./Massive/romance_bias_ds/.slots
+  massive_path: ./Massive/romance_bias
   slot_labels_ignore:
     - Other
   eval_metrics: all
   trainer_args:
-    output_dir: ./out/test_mt5_romance
+    output_dir: ./out/test_mt5_romance_bias
     per_device_eval_batch_size: 64
     eval_accumulation_steps: 4
     remove_unused_columns: false
