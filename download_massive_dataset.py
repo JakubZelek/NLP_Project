@@ -1,8 +1,13 @@
-import urllib.request
-import tarfile
-import os
 import glob
 import json
+import os
+import tarfile
+import urllib.request
+
+import torch
+from transformers import MT5Model, T5Tokenizer, MT5Config, AutoTokenizer, AutoModelForMaskedLM
+
+cwd = os.getcwd()
 
 
 class MASSIVE:
@@ -30,7 +35,6 @@ class MASSIVE:
             print("DONE.")
 
         file_name = glob.glob(root + '/Massive/1.0/data/' + language + '*.jsonl')[0]
-        print(file_name)
         with open(file_name) as f:
             json_list = map(lambda json_str: json.loads(json_str), f.read().split('\n'))
 
@@ -42,11 +46,29 @@ class MASSIVE:
 
     def __getitem__(self, index: int):
         """[] operator for MASSIVE class."""
-        # we'll see what getting will look like, because maybe we don't need all the information.
         return self.dict[index]
 
 
+class DownloadMT5:
+    def __init__(self, path):
+        config = MT5Config(d_model=768, d_ff=2048, num_layers=12, num_heads=12)
+        self.model = MT5Model.from_pretrained("google/mt5-base", ignore_mismatched_sizes=True,
+                                              config=config)
+        self.tokenizer = T5Tokenizer.from_pretrained("google/mt5-base")
+        torch.save(self.model.state_dict(), path + 'mt5-base.bin')
+        self.tokenizer.save_vocabulary(save_directory=path)
+
+
+class DownloadXLMR:
+    def __init__(self, path):
+        self.model = AutoModelForMaskedLM.from_pretrained("xlm-roberta-base")
+        self.tokenizer = AutoTokenizer.from_pretrained("xlm-roberta-base")
+
+        torch.save(self.model.state_dict(), path + 'xlm-r-base.bin')
+        self.tokenizer.save_vocabulary(save_directory=path)
+
+
 if __name__ == '__main__':
-    cwd = os.getcwd()
-    M = MASSIVE(cwd, download=False)
-    print(M[1])
+    M = MASSIVE(cwd, download=True)
+    DownloadMT5(cwd + '/saved_models/')
+    DownloadXLMR(cwd + '/saved_models/')

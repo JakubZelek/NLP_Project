@@ -1,0 +1,19 @@
+1) Na początku odpalamy MASSIVE.py, który pobiera Massiva i modele które będzie dotrenowywać.
+2) Teraz tworzymy dataset za pomocą komendy poniżej. Odpowiednie datasety pojawią się w folderze gdzie jest Massive.
+python scripts/create_hf_dataset.py -d Massive/1.0/data -o Massive/ds/
+3) Na końcu zaczynamy trenowanie. Configi są w plikach w folderze examples. Musisz wejść i zmienić ścieżki:
+    -output_dir
+    -train_dataset
+    -dev_dataset
+    -intent_labels
+    -slot_labels
+    -vocab_file
+    -pretrained_weights
+Które to są które to zostawiłem sugestie w mt5_base_enc_20220411.yml. Tam powinno być tak, że tylko początki ścieżek podmienisz i będzie git.
+Trenowanie to po prostu odpalenie:
+python scripts/train.py -c examples/mt5_base_enc_20220411.yml
+
+* Możesz mieć problem z instalacją ray[tune] (pojawi Ci się error w trakcie próby ogarnięcia bibliotek)
+Wtedy tworzysz plik req.txt i do niego wstawiasz ray[tune]
+potem pip install -Ur req.txt. Co ciekawe jak próbowałem to zrobić normalnie to wywalało błąd XD. Jest
+to też opisane na stacku.
