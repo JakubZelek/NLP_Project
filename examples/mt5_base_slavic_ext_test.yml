@@ -1,9 +1,9 @@
-run_name: &run_name mt5_base_slavic_test
+run_name: &run_name mt5_base_slavic_ext_test
 max_length: &max_length 512
 
 model:
   type: mt5 intent classification slot filling encoder only
-  checkpoint: ./out/mt5_slavic/checkpoint-2024/
+  checkpoint: ./out/mt5_slavic/checkpoint-4034/
 
 tokenizer:
   type: mt5
@@ -18,15 +18,15 @@ collator:
     padding: longest
 
 test:
-  test_dataset: ./Massive/slavic_ds/.test
-  intent_labels: ./Massive/slavic_ds/.intents
-  slot_labels: ./Massive/slavic_ds/.slots
-  massive_path: ./Massive/slavic
+  test_dataset: ./Massive/slavic_ext_ds/.test
+  intent_labels: ./Massive/slavic_ext_ds/.intents
+  slot_labels: ./Massive/slavic_ext_ds/.slots
+  massive_path: ./Massive/slavic_ext
   slot_labels_ignore:
     - Other
   eval_metrics: all
   trainer_args:
-    output_dir: ./out/test_mt5_slavic
+    output_dir: ./out/test_mt5_slavic_ext
     per_device_eval_batch_size: 64
     eval_accumulation_steps: 4
     remove_unused_columns: false

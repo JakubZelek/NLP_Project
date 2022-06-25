@@ -1,4 +1,4 @@
-run_name: &run_name mt5_base_pl
+run_name: &run_name mt5_base_slavic_ext
 max_length: &max_length 512
 
 model:
@@ -51,15 +51,15 @@ collator:
     padding: longest
 
 train_val:
-  train_dataset: ./Massive/translated_ds/.train
-  dev_dataset: ./Massive/translated_ds/.dev
-  intent_labels: ./Massive/translated_ds/.intents
-  slot_labels: ./Massive/translated_ds/.slots
+  train_dataset: ./Massive/slavic_ext_ds/.train
+  dev_dataset: ./Massive/slavic_ext_ds/.dev
+  intent_labels: ./Massive/slavic_ext_ds/.intents
+  slot_labels: ./Massive/slavic_ext_ds/.slots
   slot_labels_ignore:
     - Other
   eval_metrics: all
   trainer_args:
-    output_dir: ./out/mt5_translated
+    output_dir: ./out/mt5_slavic_ext
     evaluation_strategy: steps
     eval_steps: 100
     eval_accumulation_steps: 4
@@ -77,7 +77,7 @@ train_val:
     logging_steps: 100
     log_level: info
     save_strategy: steps
-    save_steps: 674
+    save_steps: 4034
     locale_eval_strategy: all and each
     adam_beta1: 0.8
     adam_beta2: 0.999

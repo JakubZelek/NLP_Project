@@ -1,9 +1,9 @@
-run_name: &run_name xlmr_base_slavic
+run_name: &run_name xlmr_base_slavic_ext
 max_length: &max_length 512
 
 model:
   type: xlmr intent classification slot filling
-  checkpoint: ./out/xlmr_slavic/checkpoint-7019/
+  checkpoint: ./out/xlmr_slavic_ext/checkpoint-14039/
 
 tokenizer:
   type: xlmr base
@@ -18,16 +18,16 @@ collator:
     padding: longest
 
 test:
-  test_dataset: ./Massive/slavic_ds/.test
-  intent_labels: ./Massive/slavic_ds/.intents
-  slot_labels: ./Massive/slavic_ds/.slots
-  massive_path: ./Massive/slavic
+  test_dataset: ./Massive/slavic_ext_ds/.test
+  intent_labels: ./Massive/slavic_ext_ds/.intents
+  slot_labels: ./Massive/slavic_ext_ds/.slots
+  massive_path: ./Massive/slavic_ext
   slot_labels_ignore:
     - Other
   eval_metrics: all
   #predictions_file: /PATH/TO/LOGS/xlmr_base_20220411/preds.jsonl
   trainer_args:
-    output_dir: ./out/test_xlmr_slavic
+    output_dir: ./out/test_xlmr_slavic_ext
     per_device_eval_batch_size: 128
     remove_unused_columns: false
     label_names:
