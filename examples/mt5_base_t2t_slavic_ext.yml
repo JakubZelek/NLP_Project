@@ -1,4 +1,4 @@
-run_name: &run_name mt5_base_t2t_pl
+run_name: &run_name mt5_base_t2t_slavic_ext
 max_length: &max_length 512
 
 model:
@@ -52,17 +52,17 @@ collator:
 
 train_val:
   trainer: massive s2s
-  train_dataset: ./Massive/pl_ds/.train
-  dev_dataset: ./Massive/pl_ds/.dev
-  intent_labels: ./Massive/pl_ds/.intents
-  slot_labels: ./Massive/pl_ds/.slots
+  train_dataset: ./Massive/slavic_ext_ds/.train
+  dev_dataset: ./Massive/slavic_ext_ds/.dev
+  intent_labels: ./Massive/slavic_ext_ds/.intents
+  slot_labels: ./Massive/slavic_ext_ds/.slots
   slot_labels_ignore:
     - Other
   eval_metrics: all
   trainer_args:
-    output_dir: ./out/mt5_t2t_pl
+    output_dir: ./out/mt5_t2t_slavic_ext
     save_strategy: steps
-    save_steps: 5399
+    save_steps: 32384
     evaluation_strategy: steps
     eval_steps: 100
     learning_rate: 8.0e-05
