@@ -5,7 +5,8 @@ import tarfile
 import urllib.request
 
 import torch
-from transformers import MT5Model, T5Tokenizer, MT5Config, AutoTokenizer, AutoModelForMaskedLM
+from transformers import MT5Model, T5Tokenizer, MT5Config, AutoTokenizer, AutoModelForMaskedLM, \
+    AutoModelForSeq2SeqLM
 
 cwd = os.getcwd()
 
@@ -59,6 +60,12 @@ class DownloadMT5:
         self.tokenizer.save_vocabulary(save_directory=path)
 
 
+class DownloadMT5T2T:
+    def __init__(self, path):
+        self.model = AutoModelForSeq2SeqLM.from_pretrained("google/mt5-base")
+        torch.save(self.model.state_dict(), path + 'mt5-base-t2t.bin')
+
+
 class DownloadXLMR:
     def __init__(self, path):
         self.model = AutoModelForMaskedLM.from_pretrained("xlm-roberta-base")
@@ -71,4 +78,5 @@ class DownloadXLMR:
 if __name__ == '__main__':
     M = MASSIVE(cwd, download=True)
     DownloadMT5(cwd + '/saved_models/')
+    DownloadMT5T2T(cwd + '/saved_models/')
     DownloadXLMR(cwd + '/saved_models/')
