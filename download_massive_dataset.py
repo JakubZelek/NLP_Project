@@ -75,8 +75,15 @@ class DownloadXLMR:
         self.tokenizer.save_vocabulary(save_directory=path)
 
 
+class DownloadT5:
+    def __init__(self, path):
+        self.model = AutoModelForSeq2SeqLM.from_pretrained("t5-base")
+        torch.save(self.model.state_dict(), path + 't5-base-t2t.bin')
+
+
 if __name__ == '__main__':
     M = MASSIVE(cwd, download=True)
     DownloadMT5(cwd + '/saved_models/')
     DownloadMT5T2T(cwd + '/saved_models/')
     DownloadXLMR(cwd + '/saved_models/')
+    DownloadT5(cwd + '/saved_models/')
