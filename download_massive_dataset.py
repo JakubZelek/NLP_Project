@@ -80,6 +80,9 @@ class DownloadT5:
         self.model = AutoModelForSeq2SeqLM.from_pretrained("t5-base")
         torch.save(self.model.state_dict(), path + 't5-base-t2t.bin')
 
+        self.tokenizer = T5Tokenizer.from_pretrained("t5-base")
+        self.tokenizer.save_vocabulary(save_directory=path)
+
 
 if __name__ == '__main__':
     M = MASSIVE(cwd, download=True)
