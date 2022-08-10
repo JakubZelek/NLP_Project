@@ -1,9 +1,9 @@
-run_name: &run_name t5_base_t2t_pl_test
+run_name: &run_name t5_base_t2t_ru_test
 max_length: &max_length 512
 
 model:
   type: t5 for conditional generation
-  checkpoint: ./out/t5_t2t_pl/checkpoint-674/
+  checkpoint: ./out/t5_t2t_ru/checkpoint-674/
 
 tokenizer:
   type: t5
@@ -28,16 +28,16 @@ collator:
 
 test:
   trainer: massive s2s
-  test_dataset: ./Massive/pl_ds/.test
-  intent_labels: ./Massive/pl_ds/.intents
-  slot_labels: ./Massive/pl_ds/.slots
-  massive_path: ./Massive/pl
+  test_dataset: ./Massive/ru_ds/.test
+  intent_labels: ./Massive/ru_ds/.intents
+  slot_labels: ./Massive/ru_ds/.slots
+  massive_path: ./Massive/ru
   slot_labels_ignore:
     - Other
   eval_metrics: all
   #predictions_file: /PATH/TO/LOGS/t5_base_20220411/preds_km-KH.jsonl
   trainer_args:
-    output_dir: ./out/test_t5_t2t_pl
+    output_dir: ./out/test_t5_t2t_ru
     per_device_eval_batch_size: 32
     eval_accumulation_steps: 1
     remove_unused_columns: false

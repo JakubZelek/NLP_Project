@@ -1,4 +1,4 @@
-run_name: &run_name t5_base_t2t_pl
+run_name: &run_name t5_base_t2t_sl
 max_length: &max_length 512
 
 model:
@@ -51,15 +51,15 @@ collator:
     padding: longest
 
 train_val:
-  train_dataset: ./Massive/pl_ds/.train
-  dev_dataset: ./Massive/pl_ds/.dev
-  intent_labels: ./Massive/pl_ds/.intents
-  slot_labels: ./Massive/pl_ds/.slots
+  train_dataset: ./Massive/sl_ds/.train
+  dev_dataset: ./Massive/sl_ds/.dev
+  intent_labels: ./Massive/sl_ds/.intents
+  slot_labels: ./Massive/sl_ds/.slots
   slot_labels_ignore:
     - Other
   eval_metrics: all
   trainer_args:
-    output_dir: ./out/t5_t2t_pl
+    output_dir: ./out/t5_t2t_sl
     evaluation_strategy: steps
     eval_steps: 100
     eval_accumulation_steps: 4

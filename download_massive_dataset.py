@@ -89,4 +89,4 @@ if __name__ == '__main__':
     DownloadMT5(cwd + '/saved_models/')
     DownloadMT5T2T(cwd + '/saved_models/')
     DownloadXLMR(cwd + '/saved_models/')
-    DownloadT5(cwd + '/saved_models/')
+    DownloadT5(cwd + '/saved_models/t5/')
