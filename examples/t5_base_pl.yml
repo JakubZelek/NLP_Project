@@ -1,11 +1,12 @@
-run_name: &run_name t5_base_t2t_pl
+run_name: &run_name t5_base_pl
 max_length: &max_length 512
 
 model:
-  type: mt5 for conditional generation
+  type: t5 intent classification slot filling encoder only
   size: base
-  pretrained_weights: ./saved_models/t5/t5-base-t2t.bin
+  pretrained_weights: ./saved_models/t5/t5-base.bin
   strict_load_pretrained_weights: false
+  pretrained_weight_prepend: t5.
 
   model_config_args:
     d_ff: 3072
@@ -58,7 +59,7 @@ train_val:
     - Other
   eval_metrics: all
   trainer_args:
-    output_dir: ./out/t5_t2t_pl
+    output_dir: ./out/t5_pl
     evaluation_strategy: steps
     eval_steps: 100
     eval_accumulation_steps: 4
