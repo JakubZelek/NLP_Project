@@ -18,6 +18,7 @@ from massive.loaders.collator_ic_sf import CollatorMASSIVEIntentClassSlotFill
 from massive.loaders.collator_t2t_ic_sf import CollatorMASSIVET2TIntentClassSlotFill
 from massive.models.xlmr_ic_sf import XLMRIntentClassSlotFill
 from massive.models.mt5_ic_sf_encoder_only import MT5IntentClassSlotFillEncoderOnly
+from massive.models.t5_ic_sf_encoder_only import T5IntentClassSlotFillEncoderOnly
 import datasets
 import json
 import logging
@@ -28,6 +29,10 @@ from seqeval.metrics import f1_score
 import sklearn.metrics as sklm
 import torch
 from transformers import (
+    T5Config,
+    T5ForConditionalGeneration,
+    T5TokenizerFast,
+    T5PreTrainedModel,
     MT5Config,
     MT5ForConditionalGeneration,
     MT5TokenizerFast,
@@ -74,9 +79,17 @@ def init_model(conf, intents, slots, return_hpo_fn=False):
             model_config = MT5Config(**config_args) if config_args else None
             model_cls = MT5ForConditionalGeneration
             model_kwargs = {}
+        elif conf.get('model.type') == 't5 for conditional generation':
+            model_config = T5Config(**config_args) if config_args else None
+            model_cls = T5ForConditionalGeneration
+            model_kwargs = {}
         elif conf.get('model.type') == 'mt5 intent classification slot filling encoder only':
             model_config = MT5Config(**config_args) if config_args else None
             model_cls = MT5IntentClassSlotFillEncoderOnly
+            model_kwargs = {'intent_label_dict': intents, 'slot_label_dict': slots}
+        elif conf.get('model.type') == 't5 intent classification slot filling encoder only':
+            model_config = T5Config(**config_args) if config_args else None
+            model_cls = T5IntentClassSlotFillEncoderOnly
             model_kwargs = {'intent_label_dict': intents, 'slot_label_dict': slots}
         # add more models here as additional elif statements
         else:
@@ -139,6 +152,8 @@ def init_tokenizer(conf):
         return XLMRobertaTokenizerFast(**conf.get('tokenizer.tok_args'))
     elif conf.get('tokenizer.type') == 'mt5':
         return MT5TokenizerFast(**conf.get('tokenizer.tok_args'))
+    elif conf.get('tokenizer.type') == 't5':
+        return T5TokenizerFast(**conf.get('tokenizer.tok_args'))
     # Add more tokenizers here
     else:
         raise NotImplementedError('Tokenizer type not found!')

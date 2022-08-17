@@ -1,0 +1,54 @@
+run_name: &run_name t5_base_t2t_pl_test
+max_length: &max_length 512
+
+model:
+  type: t5 intent classification slot filling encoder only
+  checkpoint: ./out/t5_t2t_pl/checkpoint-674/
+
+tokenizer:
+  type: t5
+  tok_args:
+    vocab_file: ./saved_models/t5/spiece.model
+    max_len: *max_length
+
+collator:
+  type: massive text to text intent class slot fill
+  args:
+    max_length: *max_length
+    padding: longest
+    t2t_args:
+      input_prompt: "Annotate: " # set to false for no prompt
+      use_output_descrip: false
+      intent_first: false
+      slots_mixed: false
+      toks_in_output: false
+      sentinels: false
+      inside_format: slot_name
+      outside_label: Other
+
+test:
+  trainer: massive s2s
+  test_dataset: ./Massive/pl_ds/.test
+  intent_labels: ./Massive/pl_ds/.intents
+  slot_labels: ./Massive/pl_ds/.slots
+  massive_path: ./Massive/pl
+  slot_labels_ignore:
+    - Other
+  eval_metrics: all
+  #predictions_file: /PATH/TO/LOGS/t5_base_20220411/preds_km-KH.jsonl
+  trainer_args:
+    output_dir: ./out/test_t5_t2t_pl
+    per_device_eval_batch_size: 32
+    eval_accumulation_steps: 1
+    remove_unused_columns: false
+    label_names:
+      - intent_num
+      - slots_num
+    log_level: info
+    logging_strategy: no
+    #locale_eval_strategy: all only
+    locale_eval_strategy: all and each
+    predict_with_generate: true
+    generation_max_length: *max_length
+    generation_num_beams: 2
+    disable_tqdm: false
