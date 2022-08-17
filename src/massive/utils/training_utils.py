@@ -423,15 +423,15 @@ def convert_to_bio(seq_tags, outside='Other', labels_merge=None):
     bio_tagged = []
     prev_tag = None
     for tag in seq_tags:
-        if tag in outside:
+        if prev_tag == None and tag in labels_merge:
+            bio_tagged.append('O')
+        elif tag in outside:
             bio_tagged.append('O')
             prev_tag = tag
-            continue
-        if tag != prev_tag and tag not in labels_merge:
+        elif tag != prev_tag and tag not in labels_merge:
             bio_tagged.append('B-' + tag)
             prev_tag = tag
-            continue
-        if tag == prev_tag or tag in labels_merge:
+        elif tag == prev_tag or tag in labels_merge:
             if prev_tag in outside:
                 bio_tagged.append('O')
             else:
@@ -484,6 +484,11 @@ def eval_preds(pred_intents=None, lab_intents=None, pred_slots=None, lab_slots=N
             # Pad or truncate prediction as needed using `pad` arg
             if type(pred) == list:
                 pred = pred[:len(lab)] + [pad]*(len(lab) - len(pred))
+
+            # Fix for Issue 21 -- subwords after the first one from a word should be ignored
+            for i, x in enumerate(lab):
+                if x == -100:
+                    pred[i] = -100
 
             # convert to BIO
             bio_slot_labels.append(

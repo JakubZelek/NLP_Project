@@ -22,10 +22,6 @@ import pprint
 import sys
 import time
 
-sys.path.insert(0, os.getcwd() + '/src')
-sys.path.insert(0, os.getcwd() + '/examples')
-sys.path.insert(0, '../')
-
 import datasets
 from massive import (
     MASSIVETrainer,
@@ -80,12 +76,7 @@ def main():
 
     # Check for right setup
     if not conf.get('test.predictions_file'):
-        logger.warning("Outputs will not be saved because no test.predictions_file was given")
-    if conf.get('test.predictions_file') and \
-       (conf.get('test.trainer_args.locale_eval_strategy') != 'all only'):
-        raise NotImplementedError("You must use 'all only' as the locale_eval_strategy if you"
-                                  " include a predictions file")
-
+        raise ValueError("You must provide a test.predictions file in your config.")
 
     # Get all inputs to the trainer
     tokenizer = init_tokenizer(conf)
@@ -93,9 +84,6 @@ def main():
     model = init_model(conf, intents, slots)
     collator = prepare_collator(conf, tokenizer, model)
     slots_ignore = conf.get('test.slot_labels_ignore', default=[])
-    metrics = conf.get('test.eval_metrics', default='all')
-    compute_metrics = create_compute_metrics(intents, slots, conf, tokenizer, slots_ignore,
-                                             metrics)
 
     # Get the right trainer
     trainer_cls = MASSIVESeq2SeqTrainer \
@@ -106,30 +94,19 @@ def main():
         model = model,
         args = trainer_args,
         data_collator=collator,
-        compute_metrics=compute_metrics,
         tokenizer=tokenizer
     )
 
     trainer.remove_callback(transformers.integrations.TensorBoardCallback)
 
     outputs = trainer.predict(test_ds, tokenizer=tokenizer)
+    logger.info(f"The engine has completed all predictions")
 
     rank = dist.get_rank() if dist.is_initialized() else 0
 
     if rank == 0:
-        time.sleep(3)
-        logger.info('CAUTION: Test with validation engine metrics are for reference only. For '
-                    '"official" metrics include a test.predictions_file in the config and use the '
-                    'eval.ai leaderboard')
-        logger.info(f'Validation engine metrics computer readable: {outputs.metrics}')
-        logger.info('Validation engine metrics pretty printed: ')
-        pp = pprint.PrettyPrinter(indent=2)
-        pp.pprint(outputs.metrics)
-
-        save_to_file = True if conf.get('test.predictions_file') else False
-
         output_predictions(outputs, intents, slots, conf, tokenizer,
-                           remove_slots=slots_ignore, save_to_file=save_to_file)
+                           remove_slots=slots_ignore, save_to_file=True)
 
 if __name__ == "__main__":
     main()
